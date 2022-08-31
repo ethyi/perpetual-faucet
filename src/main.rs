@@ -26,16 +26,16 @@ fn main() {
         "Initial Balance: {}, Desired Balance: {}",
         balance, desired_balance
     );
-    if balance > desired_balance {
-        panic!("err: Initial Balance already higher than desired balance");
+    if balance >= desired_balance {
+        panic!("err: Desired balance already reached");
     }
-
-    let start = Instant::now();
 
     println!("Current maximum airdrop: {} SOL", MAX_AIRDROP_ALLOWED);
     println!("Airdrops starting...");
 
     let mut amount_to_airdrop = desired_balance - balance;
+
+    let start = Instant::now();
     while amount_to_airdrop > 0.0 {
         let amount = f64::min(amount_to_airdrop, MAX_AIRDROP_ALLOWED);
         let _airdrop_signature =
@@ -45,10 +45,8 @@ fn main() {
         println!("Balance Updated: {}", balance);
     }
 
+    println!("Time elapsed: {} seconds", start.elapsed().as_secs() as f64);
+
     let balance = check_balance(&rpc_client, &pubkey).expect("unable to get balance");
-
     println!("Receiver end balance: {:?}", balance);
-    let duration = start.elapsed();
-
-    println!("Time elapsed: {} seconds", duration.as_secs() as f64);
 }
